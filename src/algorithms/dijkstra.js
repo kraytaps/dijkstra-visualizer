@@ -1,9 +1,11 @@
-const node = {
-  row,
-  col,
-  isVisited,
-  distance
-};
+// const node = {
+//   row,
+//   col,
+//   isVisited,
+//   distance
+// };
+
+// to be restructured to be caught up with PathfindingVisualizer.jsx
 
 function dijkstra(grid, startNode, finishNode) {
   if (!startNode || !finishNode || startNode == finishNode) {
