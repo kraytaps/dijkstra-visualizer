@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Node from "./Node/Node";
-import { dijkstra } from "../algorithms/dijkstra";
+import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 
 import "./PathfindingVisualizer.css";
 
@@ -34,8 +34,34 @@ export default class PathfindingVisualizer extends Component {
     this.setState({ grid: newGrid });
   }
 
-  hanldeMouseUp() {
+  handleMouseUp() {
     this.setState({ mouseIsPressed: false });
+  }
+
+  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          this.animateShortestPath(nodesInShortestPathOrder);
+        }, 10 * i);
+        return;
+      }
+      setTimeout(() => {
+        const node = visitedNodesInOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "node node-visited";
+      }, 10 * i);
+    }
+  }
+
+  animateShortestPath(nodesInShortestPathOrder) {
+    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+      setTimeout(() => {
+        const node = nodesInShortestPathOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "node node-shortest-path";
+      }, 50 * i);
+    }
   }
 
   visualizeDijkstra() {
@@ -47,6 +73,12 @@ export default class PathfindingVisualizer extends Component {
     this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
+  clearGrid = () => {
+    this.setState({ grid: [] });
+    const newGrid = getInitialGrid();
+    this.setState({ newGrid });
+  };
+
   render() {
     const { grid, mouseIsPressed } = this.state;
 
@@ -55,6 +87,7 @@ export default class PathfindingVisualizer extends Component {
         <button onClick={() => this.visualizeDijkstra()}>
           Visualize Dijkstra's Algorithm
         </button>
+        <button onClick={() => this.clearGrid()}>Clear</button>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
